@@ -317,7 +317,6 @@ export function defineFeature(
 
       afterAll(() => {
             const outputFile = `${featureFromFile.fileName.replace(/^.*[\\\/]/, '')}.fails.json`
-            console.log(`${outputFile} - ${resultingErrors.length}`)
             if (resultingErrors.length > 0) {
                 mkdir('spec/fails', { recursive: true }, (err) => {
                 if (err) throw err;
