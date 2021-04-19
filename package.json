@@ -1,5 +1,5 @@
 {
-  "name": "jest-cucumber",
+  "name": "@soomo/jest-cucumber",
   "version": "3.0.1",
   "description": "Execute Gherkin scenarios in Jest",
   "main": "dist/src/index.js",

@@ -43,6 +43,7 @@ export type ParsedFeature = {
     scenarioOutlines: ParsedScenarioOutline[];
     options: Options;
     tags: string[];
+    fileName: string;
 };
 
 export type ScenarioNameTemplateVars = {

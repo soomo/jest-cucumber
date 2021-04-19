@@ -12,6 +12,9 @@ import {
 } from './validation/step-definition-validation';
 import { applyTagFilters } from './tag-filtering';
 
+import { writeFileSync, mkdir } from "fs";
+import { publish, subscribe, BusError } from "./EventBus";
+
 export type StepsDefinitionCallbackOptions = {
     defineStep: DefineStepFunction;
     given: DefineStepFunction;
@@ -137,6 +140,11 @@ const defineScenario = (
                 .then(() => nextStep.stepFunction(...args))
                 .catch((error) => {
                     error.message = `jest-cucumber: ${parsedStep.stepText} (line ${parsedStep.lineNumber})\n\n${error.message}`;
+                    publish<BusError>("error", {
+                      lineNumber: parsedStep.lineNumber,
+                      stepText: parsedStep.stepText,
+                      errorMessage: error.message
+                    });
                     throw error;
                 });
             });
@@ -291,6 +299,12 @@ export function defineFeature(
         return;
     }
 
+    const resultingErrors: BusError[] = [];
+
+    subscribe("error", (result: BusError) => {
+      resultingErrors.push(result);
+    });
+
     describe(featureFromFile.title, () => {
         scenariosDefinitionCallback(
             createDefineScenarioFunctionWithAliases(featureFromDefinedSteps, parsedFeatureWithTagFiltersApplied),
@@ -300,5 +314,15 @@ export function defineFeature(
             parsedFeatureWithTagFiltersApplied,
             featureFromDefinedSteps,
         );
+
+      afterAll(() => {
+          if (resultingErrors.length > 0) {
+            const outputFile = `${featureFromFile.fileName.replace(/^.*[\\\/]/, '')}.fails.json`
+            mkdir('spec/fails', { recursive: true }, (err) => {
+              if (err) throw err;
+              writeFileSync(`spec/fails/${outputFile}`, JSON.stringify(resultingErrors, null, 2));
+            });
+          }
+      });
     });
 }

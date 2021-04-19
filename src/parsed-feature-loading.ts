@@ -367,7 +367,7 @@ export const loadFeature = (featureFilePath: string, options?: Options) => {
 
     try {
         const featureText: string = readFileSync(absoluteFeatureFilePath, 'utf8');
-        return parseFeature(featureText, options);
+        return { ...parseFeature(featureText, options), fileName: absoluteFeatureFilePath };
     } catch (err) {
         if (err.code === 'ENOENT') {
             throw new Error(`Feature file not found (${absoluteFeatureFilePath})`);
