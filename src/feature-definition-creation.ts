@@ -319,8 +319,9 @@ export function defineFeature(
             const outputFile = `${featureFromFile.fileName.replace(/^.*[\\\/]/, '')}.fails.json`
             if (resultingErrors.length > 0) {
                 mkdir('spec/fails', { recursive: true }, (err) => {
-                if (err) throw err;
-                writeFileSync(`spec/fails/${outputFile}`, JSON.stringify(resultingErrors, null, 2));
+                    if (err) throw err;
+                    const jsonString = JSON.stringify(resultingErrors.map(e => ({ ...e, fileName: featureFromFile.fileName })), null, 2);
+                    writeFileSync(`spec/fails/${outputFile}`, jsonString);
                 });
             }
       });
