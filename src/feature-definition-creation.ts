@@ -316,13 +316,14 @@ export function defineFeature(
         );
 
       afterAll(() => {
-          if (resultingErrors.length > 0) {
             const outputFile = `${featureFromFile.fileName.replace(/^.*[\\\/]/, '')}.fails.json`
-            mkdir('spec/fails', { recursive: true }, (err) => {
-              if (err) throw err;
-              writeFileSync(`spec/fails/${outputFile}`, JSON.stringify(resultingErrors, null, 2));
-            });
-          }
+            console.log(`${outputFile} - ${resultingErrors.length}`)
+            if (resultingErrors.length > 0) {
+                mkdir('spec/fails', { recursive: true }, (err) => {
+                if (err) throw err;
+                writeFileSync(`spec/fails/${outputFile}`, JSON.stringify(resultingErrors, null, 2));
+                });
+            }
       });
     });
 }
