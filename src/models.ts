@@ -1,3 +1,5 @@
+import { Options } from './configuration';
+
 export type StepFromStepDefinitions = {
     stepMatcher: string | RegExp;
     stepFunction(stepArguments?: any): void | PromiseLike<any>;
@@ -44,25 +46,4 @@ export type ParsedFeature = {
     options: Options;
     tags: string[];
     fileName: string;
-};
-
-export type ScenarioNameTemplateVars = {
-    featureTitle: string;
-    scenarioTitle: string;
-    scenarioTags: string[];
-    featureTags: string[];
-};
-
-export type ErrorOptions = {
-    missingScenarioInStepDefinitions: boolean;
-    missingStepInStepDefinitions: boolean;
-    missingScenarioInFeature: boolean;
-    missingStepInFeature: boolean;
-};
-
-export type Options = {
-    loadRelativePath?: boolean;
-    tagFilter?: string;
-    errors?: ErrorOptions | boolean;
-    scenarioNameTemplate?: (vars: ScenarioNameTemplateVars) => string;
 };
